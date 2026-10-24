@@ -1,25 +1,31 @@
 # NEXORA Virtual Chemistry Lab
 
-NEXORA is a React, Vite and React Three Fiber chemistry learning app. Dr. Nova's local RAG path uses Ollama, Phi-4 14B for answers, and BGE-M3 for document embeddings and retrieval. No OpenAI API key is required.
+NEXORA is an AI powered chemistry learning platform that uses virtual 3D labs, interactive experiments, and hand gestures to help students understand chemistry concepts through visual and practical learning. Students can upload PDFs to get topic explanations and follow step by step experiment instructions.
 
-## Local AI setup (Windows)
+## Local AI Setup (Windows)
 
-This laptop has a 4 GB RTX 3050 and 15.8 GB system RAM. Phi-4's 14B quantized model is the viable option from the supplied list; Llama 3.3 70B and Qwen3 30B exceed the available memory/storage budget. The 14B model runs quantized and may respond slower than a cloud model.
+NEXORA uses React, Vite, and React Three Fiber. Its local AI system uses Ollama, Phi-4 14B for answers, and BGE-M3 for document embeddings and retrieval. No OpenAI API key is required.
 
-Install Ollama from [ollama.com/download](https://ollama.com/download). There is 17.5 GB free on D: and 8.1 GB on C:. Put model files on D: before downloading them:
+### 1. Install Ollama
+
+Download Ollama from https://ollama.com/download.
+
+To store models on the D: drive, run this in PowerShell:
 
 ```powershell
 setx OLLAMA_MODELS "D:\ollama\models"
 ```
 
-Restart Ollama after setting that variable, then run:
+Restart Ollama, then run:
 
 ```powershell
 ollama pull phi4:14b-q4_K_M
 ollama pull bge-m3
 ```
 
-Optional `.env` settings (copy `.env.example` to `.env`):
+### 2. Configure Environment Variables
+
+Copy `.env.example` to `.env` and configure:
 
 ```text
 OLLAMA_URL=http://127.0.0.1:11434
@@ -28,17 +34,19 @@ OLLAMA_EMBED_MODEL=bge-m3
 API_PORT=8787
 ```
 
-Then start NEXORA from the project folder:
+### 3. Start the Project
+
+Run from the project folder:
 
 ```powershell
 npm run dev
 ```
 
-This starts the frontend and backend together. The backend checks Ollama and both models on each question, extracts text from supported files, embeds document chunks with BGE-M3, persists their vectors and metadata in `server/data/knowledge-store.json`, retrieves relevant chunks, and asks Phi-4 to answer from that context. The built-in chemistry reference is indexed on first use. Newly uploaded PDFs/Word/PPT/text documents remain available after restart.
+The backend extracts text from supported documents, creates embeddings, retrieves relevant content, and uses Phi-4 to generate answers based on the retrieved context.
 
-Supported text uploads: PDF, Word `.docx`, PowerPoint `.pptx`, TXT, Markdown, HTML and JSON, up to 20 MB. Legacy `.doc` must be saved as `.docx`. Scanned-only PDFs and images require OCR/vision and are not readable by Phi-4; the UI reports this instead of pretending to read them.
+Supported uploads include PDF, DOCX, PPTX, TXT, Markdown, HTML, and JSON files up to 20 MB. Scanned PDFs and images require OCR or vision support.
 
-## Checks
+## Project Checks
 
 ```powershell
 npm run build
@@ -46,4 +54,4 @@ npm run lint
 node --check server/index.js
 ```
 
-The titration model is an educational simulation, not laboratory-grade measurement.
+The virtual titration experiment is an educational simulation, not a laboratory-grade measurement.
